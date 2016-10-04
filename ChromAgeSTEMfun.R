@@ -245,7 +245,8 @@ chischrom2_Nmut<-function(file){
   if (dim(Medt)==2){preMedt[1]<-sum(rowSums(Med[,5:9], na.rm = T))
   }  else {Medt<-c(sum(rowSums(Med[,5:9], na.rm = T)), Medt)}
   chidata<-cbind(preMedt, Medt)
-  restodo<-(chisq.test(chidata))
+  dm<-prod(dim(chidata))
+  if(dm!=4){restodo<-c(0,0,1)} else {restodo<-(chisq.test(chidata))}
   
   #Chisqtest for tips 
   preMedtips<-tips[tips$agestem>3.4,]
@@ -259,7 +260,9 @@ chischrom2_Nmut<-function(file){
   }
   else {Medtipst<-c(sum(rowSums(Medtips[,5:9], na.rm = T)), Medtipst)}
   chidatatips<-cbind(preMedtipst, Medtipst)
-  restips<-(chisq.test(chidatatips))
+  dm<-prod(dim(chidatatips))
+  if(dm!=4){restips<-c(0,0,1)} else {restips<-(chisq.test(chidatatips))}
+
   
   #Chisqtest for tips 
   
@@ -272,8 +275,8 @@ chischrom2_Nmut<-function(file){
   if (dim(Mednodest)==2){Mednodest[1]<-sum(rowSums(Mednodes[,5:9], na.rm = T))
   } else {Mednodest<-c(sum(rowSums(Mednodes[,5:9], na.rm = T)), Mednodest)}
   chidatanodes<-cbind(preMednodest, Mednodest)
-  resnodes<-(chisq.test(chidatanodes))
-  
+  dm<-prod(dim(chidatanodes))
+  if(dm!=4){resnodes<-c(0,0,1)} else {resnodes<-(chisq.test(chidatanodes))}
   chisq<-c(c(restodo[[1]],restodo[[3]]),c(restips[[1]],restips[[3]]), c(resnodes[[1]],resnodes[[3]]))
   chisq
 }
@@ -287,5 +290,5 @@ for (i in 1:length(listfile)){
 
 colnames(resultschrom)<-c("Chisq_all","p-value_all","Chisq_tips","p-value_tips","Chisq_nodes","p-value_nodes")
 row.names(resultschrom)<-listfile
-
+resultschrom
 write.table(resultschrom, file="/home/fbalao/Datos/R/Rpackages/ChromTT/results/Analysis_stem_Nmutransitions.txt", sep="\t")
