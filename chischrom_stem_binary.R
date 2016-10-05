@@ -29,14 +29,14 @@ chischrom_stem_binary<-function(file){
     restips<-(chisq.test(chidatatips))
   }
   
-  #Chisqtest for tips 
+  #Chisqtest for nodes
   
   preMednodes<-nodes[nodes$agestem>3.4,]
   Mednodes<-nodes[nodes$agestem<3.4,]
   preMednodest<-table(rowSums(preMednodes[,5:9], na.rm = T)==0)
   Mednodest<-table(rowSums(Mednodes[,5:9], na.rm = T)==0)    
   chidatanodes<-cbind(preMednodest, Mednodest)
-  dm<-prod(dim(chidatatips))
+  dm<-prod(dim(chidatanodes))
   if(dm!=4){
     resnodes<-c(NA,NA,NA)
   }   else {
@@ -50,13 +50,13 @@ chischrom_stem_binary<-function(file){
 
 setwd("/home/fbalao/Datos/R/Rpackages/ChromTT/summary/")
 listfile<-dir()
-resultschrom<-matrix(nrow=length(listfile), ncol=6)
+resultschrom.stem<-matrix(nrow=length(listfile), ncol=6)
 for (i in 1:length(listfile)){
-  tryCatch(resultschrom[i,]<-chischrom_stem_binary(file=listfile[i]), error=function(e) {
+  tryCatch(resultschrom.stem[i,]<-chischrom_stem_binary(file=listfile[i]), error=function(e) {
     print('Error')    })
 }
 
-colnames(resultschrom)<-c("Chisq_all","p-value_all","Chisq_tips","p-value_tips","Chisq_nodes","p-value_nodes")
-row.names(resultschrom)<-listfile
-
-write.table(resultschrom, file="/home/fbalao/Datos/R/Rpackages/ChromTT/results/Analysis_stem_binarytransitions.txt", sep="\t")
+colnames(resultschrom.stem)<-c("Chisq_all","p-value_all","Chisq_tips","p-value_tips","Chisq_nodes","p-value_nodes")
+row.names(resultschrom.stem)<-listfile
+resultschrom.stem
+write.table(resultschrom.stem, file="/home/fbalao/Datos/R/Rpackages/ChromTT/results/Analysis_stem_binarytransitions.txt", sep="\t")
