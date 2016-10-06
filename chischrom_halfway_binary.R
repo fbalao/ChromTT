@@ -17,13 +17,13 @@ chischrom.halfway<-function(file){
   
   
   # New method uniform
-  # Nnodestotal <- dim(x)[1]
-  # NnodespreMed <- dim(preMed)[1]
-  # NnodesMed <- dim(Med)[1]
-  # NmutpreMed <-  NnodespreMed- sum(rowSums(preMed[,5:9], na.rm = T)==0)
-  # NmutMed <-  NnodesMed- sum(rowSums(Med[,5:9], na.rm = T)==0)
-  # restodo <-chisq.test(c(NmutpreMed,NmutMed), p=c(NnodespreMed/Nnodestotal,NnodesMed/Nnodestotal ))
-  # 
+  Nnodestotal <- dim(x)[1]
+  NnodespreMed <- dim(preMed)[1]
+  NnodesMed <- dim(Med)[1]
+  NmutpreMed <-  NnodespreMed- sum(rowSums(preMed[,5:9], na.rm = T)==0)
+  NmutMed <-  NnodesMed- sum(rowSums(Med[,5:9], na.rm = T)==0)
+  restodo <-chisq.test(c(NmutpreMed,NmutMed), p=c(NnodespreMed/Nnodestotal,NnodesMed/Nnodestotal ))
+
   
 # Chisqtest for tips HALFWAY
   preMedtips<-tips[((tips$agestem - tips$age)/2 + tips$age) >3.4,]
@@ -39,13 +39,13 @@ chischrom.halfway<-function(file){
   }
   
   # New method uniform
-  # Ntipstotal <- dim(x)[1]
-  # NtipspreMed <- dim(preMed)[1]
-  # NtipsMed <- dim(Med)[1]
-  # NmuttipspreMed <-  NtipspreMed- sum(rowSums(preMedtips[,5:9], na.rm = T)==0)
-  # NmuttipsMed <-  NtipsMed- sum(rowSums(Medtips[,5:9], na.rm = T)==0)
-  # restips <-chisq.test(c(NmuttipspreMed,NmuttipsMed), p=c(NtipspreMed/Ntipstotal,NtipsMed/Ntipstotal ))
-  #   
+  Ntipstotal <- dim(x)[1]
+  NtipspreMed <- dim(preMed)[1]
+  NtipsMed <- dim(Med)[1]
+  NmuttipspreMed <-  NtipspreMed- sum(rowSums(preMedtips[,5:9], na.rm = T)==0)
+  NmuttipsMed <-  NtipsMed- sum(rowSums(Medtips[,5:9], na.rm = T)==0)
+  restips <-chisq.test(c(NmuttipspreMed,NmuttipsMed), p=c(NtipspreMed/Ntipstotal,NtipsMed/Ntipstotal ))
+
   
   
   #Chisqtest for nodes HALFWAY NODE 
@@ -63,13 +63,13 @@ chischrom.halfway<-function(file){
   }
   
   # New method uniform
-  # Nnodestotal <- dim(x)[1]
-  # NnodespreMed <- dim(preMed)[1]
-  # NnodesMed <- dim(Med)[1]
-  # NmutnodespreMed <-  NnodespreMed- sum(rowSums(preMednodes[,5:9], na.rm = T)==0)
-  # NmutnodesMed <-  NnodesMed- sum(rowSums(Mednodes[,5:9], na.rm = T)==0)
-  # resnodes <-chisq.test(c(NmutnodespreMed,NmutnodesMed), p=c(NnodespreMed/Nnodestotal,NnodesMed/Nnodestotal ))
-  #   
+  Nnodestotal <- dim(x)[1]
+  NnodespreMed <- dim(preMed)[1]
+  NnodesMed <- dim(Med)[1]
+  NmutnodespreMed <-  NnodespreMed- sum(rowSums(preMednodes[,5:9], na.rm = T)==0)
+  NmutnodesMed <-  NnodesMed- sum(rowSums(Mednodes[,5:9], na.rm = T)==0)
+  resnodes <-chisq.test(c(NmutnodespreMed,NmutnodesMed), p=c(NnodespreMed/Nnodestotal,NnodesMed/Nnodestotal ))
+
   
   
   
@@ -91,4 +91,4 @@ colnames(resultschrom.halfway)<-c("Chisq_all","p-value_all","Chisq_tips","p-valu
 row.names(resultschrom.halfway)<-listfile
 resultschrom.halfway
 
-write.table(resultschrom, file="/home/fbalao/Datos/R/Rpackages/ChromTT/results/Analysis_halfway_binarytransitions.txt", sep="\t")
+write.table(round(resultschrom.halfway, 5), file="/home/fbalao/Datos/R/Rpackages/ChromTT/results/Analysis_halfway_binarytransitions.txt", sep="\t")
