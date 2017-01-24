@@ -1,17 +1,21 @@
-chischrom.halfway.totmut_displo<-function(file){
+chischrom.halfway.totmut_dysplo<-function(file){
   x<-read.table(file, header=T, strip.white = T)
   x$n<- substr(x$name, start=1, stop=2)
   nodes<-x[grep("N[1-9]", x$n),]
+  nodes<-nodes[nodes$name!='N1',]
   tips<-x[-(grep("N[1-9]", x$n)),]
+  tips<-tips[tips$name!='N1',]
   preMed<-x[((x$agestem - x$age)/2 + x$age) >3.4,]
+  preMed<-preMed[preMed$name!='N1',]
   Med<-x[((x$agestem - x$age)/2 + x$age)<3.4,]
-  Nnodestotal <- dim(x)[1]
-  NnodespreMed <- dim(preMed)[1]
-  NnodesMed <- dim(Med)[1]
+  Med<-Med[Med$name!='N1',]
+  Ntotal <- dim(x)[1]-1
+  NpreMed <- dim(preMed)[1]
+  NMed <- dim(Med)[1]
   NmutpreMed <-  sum(rowSums(preMed[,5:6], na.rm=T))
   NmutMed <-  sum(rowSums(Med[,5:6], na.rm=T))
   if (sum(c(NmutpreMed,NmutMed))!=0){
-    restodo <-chisq.test(c(NmutpreMed,NmutMed), p=c(NnodespreMed/Nnodestotal,NnodesMed/Nnodestotal ), simulate.p.value = T, B=999)
+    restodo <-chisq.test(c(NmutpreMed,NmutMed), p=c(NpreMed/Ntotal,NMed/Ntotal ), simulate.p.value = T, B=999)
   } else {
     restodo<-c(NA,NA,NA)
   }
@@ -24,8 +28,8 @@ chischrom.halfway.totmut_displo<-function(file){
   NtipsMed <- dim(Medtips)[1]
   NmuttipspreMed <-  sum(rowSums(preMedtips[,5:6], na.rm=T))
   NmuttipsMed <-  sum(rowSums(Medtips[,5:6], na.rm=T))
-  if (sum(c(NmuttipspreMed,NmuttipspreMed))!=0){
-    restips <-chisq.test(c(NmuttipspreMed,NmuttipspreMed), p=c(NtipspreMed/Ntipstotal,NtipsMed/Ntipstotal ), simulate.p.value = T, B=999)
+  if (sum(c(NmuttipspreMed,NmuttipsMed))!=0){
+    restips <-chisq.test(c(NmuttipspreMed,NmuttipsMed), p=c(NtipspreMed/Ntipstotal,NtipsMed/Ntipstotal ), simulate.p.value = T, B=999)
   } else {
     restips<-c(NA,NA,NA)
   }
@@ -46,7 +50,7 @@ chischrom.halfway.totmut_displo<-function(file){
     resnodes<-c(NA,NA,NA)
   }
   
-  chisq<-c(c(restodo[[1]],restodo[[3]]),c(restips[[1]],restips[[3]]), c(resnodes[[1]],resnodes[[3]]))
+  chisq<-c(c(NpreMed, NMed, NmutpreMed, NmutMed,restodo[[1]],restodo[[3]]),c(NtipspreMed, NtipsMed,NmuttipspreMed, NmuttipsMed,restips[[1]],restips[[3]]), c(NnodespreMed, NnodesMed,NmutnodespreMed, NmutnodesMed,resnodes[[1]],resnodes[[3]]))
   chisq
 }
 
@@ -54,14 +58,14 @@ chischrom.halfway.totmut_displo<-function(file){
 setwd("/home/fbalao/Datos/R/Rpackages/ChromTT/summary/")
 listfile<-dir()
 
-resultschrom.halfway_totmut.displo<-matrix(nrow=length(listfile), ncol=6)
+resultschrom.halfway_totmut.dysplo<-matrix(nrow=length(listfile), ncol=18)
 for (i in 1:length(listfile)){
-  tryCatch(resultschrom.halfway_totmut.displo[i,]<-chischrom.halfway.totmut_displo(file=listfile[i]), error=function(e) {
+  tryCatch(resultschrom.halfway_totmut.dysplo[i,]<-chischrom.halfway.totmut_dysplo(file=listfile[i]), error=function(e) {
     print('Error')    })
 }
 
-colnames(resultschrom.halfway_totmut.displo)<-c("Chisq_all","p-value_all","Chisq_tips","p-value_tips","Chisq_nodes","p-value_nodes")
-row.names(resultschrom.halfway_totmut.displo)<-listfile
-resultschrom.halfway_totmut.displo
+colnames(resultschrom.halfway_totmut.dysplo)<-c("NpreMed", "NMed" ,"NmutpreMed", "NmutMed","Chisq_all","p-value_all","NpreMed", "NMed" ,"NmutpreMed", "NmutMed","Chisq_tips","p-value_tips","NpreMed", "NMed" ,"NmutpreMed", "NmutMed","Chisq_nodes","p-value_nodes")
+row.names(resultschrom.halfway_totmut.dysplo)<-listfile
+resultschrom.halfway_totmut.dysplo
 
-write.table(round(resultschrom.halfway_totmut.displo, 5), file="/home/fbalao/Datos/R/Rpackages/ChromTT/results/Analysis_halfway_totmut_displo.txt", sep="\t")
+write.table(round(resultschrom.halfway_totmut.dysplo, 5), file="/home/fbalao/Datos/R/Rpackages/ChromTT/results/Analysis_halfway_totmut_dysplo.txt", sep="\t")
